@@ -38,7 +38,7 @@ namespace BarcodePrinter.ViewModels
         {
             get
             {
-                return AppPrinter.InstalledPrinters;
+                return AppPrinter.InstalledZebraPrinters;
             }
         }
 

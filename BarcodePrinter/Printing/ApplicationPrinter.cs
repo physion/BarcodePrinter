@@ -1,29 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.Linq;
 
 namespace BarcodePrinter.Printing
 {
     public class ApplicationPrinter
     {
-        public IList<string> InstalledPrinters { 
-            get {
+        public IList<string> InstalledPrinters
+        {
+            get
+            {
                 return ToSortedStringArray(PrinterSettings.InstalledPrinters);
             }
         }
 
-        public string DefaultZebraPrinter {
-            get {
-                foreach (string printer in InstalledPrinters)
+        public IList<string> InstalledZebraPrinters
+        {
+            get
             {
-                if (!string.IsNullOrEmpty(printer)
-                    && printer.ToUpper().Contains("ZEBRA"))
-                {
-                    return printer;
-                }
+                return InstalledPrinters.Where(IsZebraPrinter).ToList();
             }
-            return null;
-            }
+        }
+
+        public string DefaultZebraPrinter
+        {
+            get { return InstalledZebraPrinters.FirstOrDefault(); }
+        }
+
+        private static bool IsZebraPrinter(string printer)
+        {
+            return !string.IsNullOrEmpty(printer)
+                   && printer.ToUpper().Contains("ZEBRA");
         }
 
         private IList<string> ToSortedStringArray(PrinterSettings.StringCollection printers)
