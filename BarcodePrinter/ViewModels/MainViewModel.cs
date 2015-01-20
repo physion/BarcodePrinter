@@ -28,6 +28,20 @@ namespace BarcodePrinter.ViewModels
             }
         }
 
+        int _printProgress = 0;
+        public int Progress {
+            get
+            {
+                return _printProgress;
+            }
+
+            set
+            {
+                _printProgress = value;
+                NotifyOfPropertyChange(() => Progress);
+            }
+        }
+
         [ImportingConstructor]
         public MainViewModel(BarcodeLabel label, ApplicationPrinter printer)
         {

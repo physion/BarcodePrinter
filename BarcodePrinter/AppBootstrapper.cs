@@ -11,13 +11,20 @@ using BarcodePrinter.Printing;
 
 namespace BarcodePrinter
 {
-    class AppBootstrapper : BootstrapperBase
+    class AppBootstrapper : BootstrapperBase, IDisposable
     {
         private CompositionContainer container;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AppBootstrapper()
         {
             StartRuntime();
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            //TODO read parameter and set it in BarcodeLabel
+            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(Guid.NewGuid().ToString(), 1000, 150), new ApplicationPrinter()));
         }
 
         protected override void Configure()
@@ -33,13 +40,6 @@ namespace BarcodePrinter
             container.Compose(batch);
         }
 
-        protected override void OnStartup(object sender, StartupEventArgs e)
-        {
-            //TODO read parameter and set it in BarcodeLabel
-            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(Guid.NewGuid().ToString(), 600, 150), new ApplicationPrinter()));
-        }
-
-
         protected override object GetInstance(Type serviceType, string key)
         {
             string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
@@ -51,6 +51,13 @@ namespace BarcodePrinter
             }
 
             throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+        }
+
+
+
+        public void Dispose()
+        {
+            container.Dispose();
         }
     }
 }
