@@ -25,7 +25,7 @@ namespace BarcodePrinter.Logging
         private string CreateLogMessage(string format, params object[] args)
         {
             return string.Format("[{0}] {1}",
-                                 DateTime.Now.ToString("o"),
+                                 DateTime.Now.ToString(),
                                  string.Format(format, args));
         }
         #endregion

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using BarcodeLib;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Windows;
+using Com.SharpZebra.Printing;
+using Com.SharpZebra.Commands;
+using Com.SharpZebra;
 
 
 namespace BarcodePrinter
@@ -27,14 +29,15 @@ namespace BarcodePrinter
             this.Height = height;
         }
 
-        public string Contents {get; private set;}
+        public string Contents { get; private set; }
 
-        public string Code { get; private set; }
+        public string BarcodeType { get; private set; }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public ImageSource Image {
+        public ImageSource Image
+        {
             get
             {
                 return RenderImage().ToBitmapSource();
@@ -43,7 +46,7 @@ namespace BarcodePrinter
 
         public Image RenderImage()
         {
-            Barcode b = new Barcode(Contents, TYPE.CODE128);
+            BarcodeLib.Barcode b = new BarcodeLib.Barcode(Contents, BarcodeLib.TYPE.CODE128);
             b.ForeColor = System.Drawing.Color.Black;
             b.BackColor = System.Drawing.Color.White;
             b.Width = Width;
@@ -51,9 +54,26 @@ namespace BarcodePrinter
             b.IncludeLabel = true;
 
 
-            return b.Encode(TYPE.CODE128, Contents);
+            return b.Encode(BarcodeLib.TYPE.CODE128, Contents);
         }
-        public void Print(string printer) { }
+        public void Print(string printer)
+        {
+            PrinterSettings ps = new PrinterSettings();
+            ps.PrinterName = printer;
+
+            List<byte> page = new List<byte>();
+            page.AddRange(ZPLCommands.ClearPrinter(ps));
+
+            Barcode barcode = new Barcode()
+            {
+                Type = Com.SharpZebra.BarcodeType.CODE128_AUTO,
+                BarWidthNarrow = 2
+            };
+            page.AddRange(ZPLCommands.BarCodeWrite(10, 10, Height, ElementDrawRotation.NO_ROTATION, barcode, true, Contents));
+
+            page.AddRange(ZPLCommands.PrintBuffer(1));
+            new SpoolPrinter(ps).Print(page.ToArray());
+        }
     }
 
 

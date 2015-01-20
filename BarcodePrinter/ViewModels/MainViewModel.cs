@@ -71,7 +71,7 @@ namespace BarcodePrinter.ViewModels
 
         public void Print()
         {
-            //TODO
+            Label.Print(SelectedPrinter);
             Application.Current.Shutdown();
         }
     }

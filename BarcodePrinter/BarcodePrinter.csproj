@@ -152,6 +152,7 @@
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="BarcodeLabel.cs" />
     <Compile Include="Logging\DebugLogger.cs" />
+    <Compile Include="Logging\NLogLogger.cs" />
     <Compile Include="Printing\ApplicationPrinter.cs" />
     <Compile Include="Printing\LabelBuilder.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />

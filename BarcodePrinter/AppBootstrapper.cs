@@ -22,32 +22,69 @@ namespace BarcodePrinter
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AppBootstrapper()
         {
-            LogManager.GetLog = type => new DebugLogger(type);
             StartRuntime();
+            LogManager.GetLog = type => new DebugLogger(type);
         }
 
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            //TODO read parameter and set it in BarcodeLabel
-            string[] args = Environment.GetCommandLineArgs();
-            if (args != null && args.Length >= 2)
-            {
-                string path = args[1];
-                LogManager.GetLog(GetType()).Info("Opening {} for printing", path);
-                using (StreamReader reader = File.OpenText(path))
-                {
-                    dynamic o = JToken.ReadFrom(new JsonTextReader(reader));
-                    ShowPrintLabel(o.label, o.height, o.width);
-                }
+            ILog logger = LogManager.GetLog(GetType());
 
+            //string[] args = Environment.GetCommandLineArgs();
+            //if (args != null && args.Length >= 2)
+            //{
+            //    string path = args[1];
+            //    OpenLabel(path);
+
+            //}
+
+            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null && 
+                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Length > 0)
+            {
+                try
+                {
+                    string pathUri = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+
+                    // It comes in as a URI; this helps to convert it to a path.
+                    Uri uri = new Uri(pathUri);
+                    string path = uri.LocalPath;
+
+                    OpenLabel(path);
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
             }
             else
             {
-                ShowPrintLabel(Guid.NewGuid().ToString(), 1000, 300);
+                OpenLabel("../../test.obc.txt");
+                //ShowPrintLabel("TEST", 500, 120);
             }
 
-            
+
+        }
+
+        private void OpenLabel(string path)
+        {
+            ILog logger = LogManager.GetLog(GetType());
+
+            logger.Info("Opening {0} for printing", path);
+            try
+            {
+                using (StreamReader reader = File.OpenText(path))
+                {
+                    dynamic o = JToken.ReadFrom(new JsonTextReader(reader));
+                    ShowPrintLabel((string)o.label, (int)o.width, (int)o.height);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                logger.Error(ex);
+            }
+
         }
 
         private void ShowPrintLabel(string label, int width, int height)
