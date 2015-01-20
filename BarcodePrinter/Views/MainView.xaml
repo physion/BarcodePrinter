@@ -9,7 +9,7 @@
         d:DataContext="{d:DesignInstance Type=model:MainViewModel, IsDesignTimeCreatable=False}"
         Title="{Binding WindowTitle}"
         cal:Bind.AtDesignTime="True"    
-        Height="200" 
+        Height="150" 
         Width="300">
     <Grid>
         <StackPanel>

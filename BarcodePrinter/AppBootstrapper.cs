@@ -71,30 +71,9 @@ namespace BarcodePrinter
                 //ShowPrintLabel("TEST", 500, 120);
             }
 
-            Task.Run(() => CheckUpdates());
-
         }
 
-        void AssociateFileExtenstion()
-        {
-            
-        }
-
-        async Task CheckUpdates()
-        {
-
-            //TODO we should do this at app exit
-
-            using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "us-physion-barcode-printer", FrameworkVersion.Net45))
-            {
-                SquirrelAwareApp.HandleEvents(onInitialInstall: v => AssociateFileExtenstion(),
-                    onAppUpdate: v=> AssociateFileExtenstion(),
-                    // ReSharper disable once AccessToDisposedClosure
-                    onAppUninstall: v => mgr.RemoveShortcutForThisExe());
-
-                await mgr.UpdateApp();
-            }
-        }
+        
 
         private void OpenLabel(string path)
         {

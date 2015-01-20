@@ -8,15 +8,55 @@ using BarcodePrinter.Printing;
 using System.Windows.Media;
 using System.Windows;
 using Caliburn.Micro;
+using Squirrel;
 
 namespace BarcodePrinter.ViewModels
 {
     [Export(typeof(MainViewModel))]
-    class MainViewModel : PropertyChangedBase
+    class MainViewModel : Screen
     {
         private const string WindowTitleDefault = "Ovation Barcode";
 
         private string _windowTitle = WindowTitleDefault;
+        private Task updateTask {get; set; }
+
+        [ImportingConstructor]
+        public MainViewModel(BarcodeLabel label, ApplicationPrinter printer)
+        {
+            this.Label = label;
+            this.AppPrinter = printer;
+            this.SelectedPrinter = printer.DefaultZebraPrinter;
+        }
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            updateTask = Task.Run(() => CheckUpdates());
+        }
+
+        public override void CanClose(Action<bool> callback)
+        {
+            callback(updateTask.IsCompleted || updateTask.IsFaulted);
+        }
+
+        async Task CheckUpdates()
+        {
+
+            using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "us-physion-barcode-printer", FrameworkVersion.Net45))
+            {
+                SquirrelAwareApp.HandleEvents(onInitialInstall: v => AssociateFileExtenstion(),
+                    onAppUpdate: v => AssociateFileExtenstion(),
+                    // ReSharper disable once AccessToDisposedClosure
+                    onAppUninstall: v => mgr.RemoveShortcutForThisExe());
+
+                await mgr.UpdateApp();
+            }
+        }
+
+        void AssociateFileExtenstion()
+        {
+
+        }
 
         public BarcodeLabel Label { get; private set; }
 
@@ -56,13 +96,7 @@ namespace BarcodePrinter.ViewModels
             }
         }
 
-        [ImportingConstructor]
-        public MainViewModel(BarcodeLabel label, ApplicationPrinter printer)
-        {
-            this.Label = label;
-            this.AppPrinter = printer;
-            this.SelectedPrinter = printer.DefaultZebraPrinter;
-        }
+
 
         public string WindowTitle
         {
