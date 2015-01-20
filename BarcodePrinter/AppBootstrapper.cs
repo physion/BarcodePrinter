@@ -67,8 +67,10 @@ namespace BarcodePrinter
 //            }
             else
             {
-                OpenLabel("../../test.obc");
-                //ShowPrintLabel("TEST", 500, 120);
+                MessageBox.Show("Double-click an '.obc' file.", "Oops!",
+                    MessageBoxButton.OK, MessageBoxImage.Hand);
+
+                Application.Current.Shutdown();
             }
 
         }
