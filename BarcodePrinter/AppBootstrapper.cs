@@ -8,6 +8,10 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using BarcodePrinter.Printing;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using BarcodePrinter.Logging;
 
 namespace BarcodePrinter
 {
@@ -18,13 +22,37 @@ namespace BarcodePrinter
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AppBootstrapper()
         {
+            LogManager.GetLog = type => new DebugLogger(type);
             StartRuntime();
         }
+
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             //TODO read parameter and set it in BarcodeLabel
-            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(Guid.NewGuid().ToString(), 1000, 200), new ApplicationPrinter()));
+            string[] args = Environment.GetCommandLineArgs();
+            if (args != null && args.Length >= 2)
+            {
+                string path = args[1];
+                LogManager.GetLog(GetType()).Info("Opening {} for printing", path);
+                using (StreamReader reader = File.OpenText(path))
+                {
+                    dynamic o = JToken.ReadFrom(new JsonTextReader(reader));
+                    ShowPrintLabel(o.label, o.height, o.width);
+                }
+
+            }
+            else
+            {
+                ShowPrintLabel(Guid.NewGuid().ToString(), 1000, 300);
+            }
+
+            
+        }
+
+        private void ShowPrintLabel(string label, int width, int height)
+        {
+            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter()));
         }
 
         protected override void Configure()

@@ -9,7 +9,7 @@
         d:DataContext="{d:DesignInstance Type=model:MainViewModel, IsDesignTimeCreatable=False}"
         Title="{Binding WindowTitle}"
         cal:Bind.AtDesignTime="True"    
-        Height="300" 
+        Height="200" 
         Width="300">
     <Grid>
         <StackPanel>
@@ -26,7 +26,8 @@
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Right"
                         Margin="10,10">
-                <Button x:Name="Print">Print Label</Button>
+                <Button x:Name="Print"
+                        IsDefault="True">Print Label</Button>
             </StackPanel>
         </StackPanel>
     </Grid>
