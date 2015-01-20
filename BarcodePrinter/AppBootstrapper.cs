@@ -41,7 +41,7 @@ namespace BarcodePrinter
 
             //}
 
-            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null && 
+            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null &&
                 AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Length > 0)
             {
                 try
@@ -70,13 +70,19 @@ namespace BarcodePrinter
 
         }
 
+        void pass() { }
+
         async Task CheckUpdates()
         {
 
             //TODO we should do this at app exit
 
-            using (var mgr = new UpdateManager("https://path/to/my/update/folder", "nuget-package-id", FrameworkVersion.Net45))
+            using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "us-physion-barcode-printer", FrameworkVersion.Net45))
             {
+                SquirrelAwareApp.HandleEvents(onInitialInstall: v => pass(),
+                    onAppUpdate: v=> pass(),
+                    onAppUninstall: v => mgr.RemoveShortcutForThisExe());
+
                 await mgr.UpdateApp();
             }
         }

@@ -12,7 +12,7 @@ using Caliburn.Micro;
 namespace BarcodePrinter.ViewModels
 {
     [Export(typeof(MainViewModel))]
-    class MainViewModel : Caliburn.Micro.PropertyChangedBase
+    class MainViewModel : PropertyChangedBase
     {
         private const string WindowTitleDefault = "Ovation Barcode";
 
