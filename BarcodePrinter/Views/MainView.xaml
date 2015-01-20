@@ -15,10 +15,10 @@
         <StackPanel>
             <DockPanel Margin="10,10">
                 <Label>Printer:</Label>
-                <ComboBox x:Name="Printer"
+                <ComboBox Name="Printer"
                           HorizontalAlignment="Stretch"
                           ItemsSource="{Binding AvailablePrinters}"
-                          SelectedItem="{Binding SelectedPrinter, Mode=TwoWay}"/>
+                          SelectedItem="{Binding SelectedPrinter}"/>
             </DockPanel>
             
             <Image x:Name="LabelImage"/>
@@ -27,7 +27,8 @@
                         HorizontalAlignment="Right"
                         Margin="10,10">
                 <Button x:Name="Print"
-                        IsDefault="True">Print Label</Button>
+                        IsDefault="True"
+                        Content="Print Label"/>
             </StackPanel>
         </StackPanel>
     </Grid>

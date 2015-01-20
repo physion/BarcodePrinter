@@ -20,6 +20,7 @@ namespace BarcodePrinter
     class AppBootstrapper : BootstrapperBase, IDisposable
     {
         private CompositionContainer container;
+        private WindowManager windowManager;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AppBootstrapper()
@@ -31,6 +32,8 @@ namespace BarcodePrinter
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+
             ILog logger = LogManager.GetLog(GetType());
 
             //string[] args = Environment.GetCommandLineArgs();
@@ -58,6 +61,8 @@ namespace BarcodePrinter
                 catch (Exception ex)
                 {
                     logger.Error(ex);
+                    MessageBox.Show("Unable to open label file:\n" + ex.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Shutdown();
                 }
             }
             else
@@ -70,7 +75,10 @@ namespace BarcodePrinter
 
         }
 
-        void pass() { }
+        void AssociateFileExtenstion()
+        {
+            
+        }
 
         async Task CheckUpdates()
         {
@@ -79,8 +87,9 @@ namespace BarcodePrinter
 
             using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "us-physion-barcode-printer", FrameworkVersion.Net45))
             {
-                SquirrelAwareApp.HandleEvents(onInitialInstall: v => pass(),
-                    onAppUpdate: v=> pass(),
+                SquirrelAwareApp.HandleEvents(onInitialInstall: v => AssociateFileExtenstion(),
+                    onAppUpdate: v=> AssociateFileExtenstion(),
+                    // ReSharper disable once AccessToDisposedClosure
                     onAppUninstall: v => mgr.RemoveShortcutForThisExe());
 
                 await mgr.UpdateApp();
@@ -103,13 +112,15 @@ namespace BarcodePrinter
             catch (FileNotFoundException ex)
             {
                 logger.Error(ex);
+                MessageBox.Show("Unable to open label file:\n" + ex.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
             }
 
         }
 
         private void ShowPrintLabel(string label, int width, int height)
         {
-            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter()));
+            windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter()));
         }
 
         protected override void Configure()
@@ -123,6 +134,8 @@ namespace BarcodePrinter
             batch.AddExportedValue(container);
 
             container.Compose(batch);
+
+            windowManager = new WindowManager();
         }
 
         protected override object GetInstance(Type serviceType, string key)

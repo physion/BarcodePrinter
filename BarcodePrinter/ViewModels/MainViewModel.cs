@@ -20,9 +20,21 @@ namespace BarcodePrinter.ViewModels
 
         public BarcodeLabel Label { get; private set; }
 
-        public String SelectedPrinter { get; set; }
+        private string _selectedPrinter;
+
+        public string SelectedPrinter
+        {
+            get { return _selectedPrinter; }
+            set
+            {
+                _selectedPrinter = value;
+                NotifyOfPropertyChange(() => SelectedPrinter);
+                NotifyOfPropertyChange(() => CanPrint);
+            }
+        }
+
         private ApplicationPrinter AppPrinter { get; set; }
-        public IList<String> AvailablePrinters
+        public IList<string> AvailablePrinters
         {
             get
             {
@@ -79,8 +91,15 @@ namespace BarcodePrinter.ViewModels
             catch (Exception e)
             {
                 LogManager.GetLog(GetType()).Error(e);
-                throw;
+                MessageBox.Show("Unable to print label:\n" + e.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        public bool CanPrint
+        {
+            get { return SelectedPrinter != null; }
+        }
+
+
     }
 }
