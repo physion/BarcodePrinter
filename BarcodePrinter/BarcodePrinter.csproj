@@ -156,6 +156,8 @@
     <Compile Include="Logging\NLogLogger.cs" />
     <Compile Include="Printing\ApplicationPrinter.cs" />
     <Compile Include="Printing\LabelBuilder.cs" />
+    <Compile Include="AppUpater.cs" />
+    <Compile Include="Printing\PrintCompletion.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

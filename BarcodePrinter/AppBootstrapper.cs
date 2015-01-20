@@ -14,13 +14,15 @@ using Newtonsoft.Json;
 using BarcodePrinter.Logging;
 using Squirrel;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace BarcodePrinter
 {
-    class AppBootstrapper : BootstrapperBase, IDisposable
+    class AppBootstrapper : BootstrapperBase, IDisposable, IHandle<PrintCompletion>
     {
         private CompositionContainer container;
         private WindowManager windowManager;
+        private IEventAggregator eventAggregator = new EventAggregator();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AppBootstrapper()
@@ -32,8 +34,6 @@ namespace BarcodePrinter
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
-            Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-
             ILog logger = LogManager.GetLog(GetType());
 
             //string[] args = Environment.GetCommandLineArgs();
@@ -99,8 +99,10 @@ namespace BarcodePrinter
 
         private void ShowPrintLabel(string label, int width, int height)
         {
-            windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter()));
+            eventAggregator.Subscribe(this);
+            windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter(), eventAggregator));
         }
+
 
         protected override void Configure()
         {
@@ -108,8 +110,8 @@ namespace BarcodePrinter
 
             CompositionBatch batch = new CompositionBatch();
 
-            batch.AddExportedValue<IWindowManager>(new WindowManager());
-            batch.AddExportedValue<IEventAggregator>(new EventAggregator());
+            batch.AddExportedValue<IWindowManager>(windowManager);
+            batch.AddExportedValue<IEventAggregator>(eventAggregator);
             batch.AddExportedValue(container);
 
             container.Compose(batch);
@@ -135,6 +137,11 @@ namespace BarcodePrinter
         public void Dispose()
         {
             container.Dispose();
+        }
+
+        public void Handle(PrintCompletion message)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

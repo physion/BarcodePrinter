@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Composition;
+using System.Net;
+using System.Threading;
 using BarcodePrinter.Printing;
 using System.Windows.Media;
 using System.Windows;
 using Caliburn.Micro;
-using Squirrel;
+using NLog;
+using LogManager = Caliburn.Micro.LogManager;
 
 namespace BarcodePrinter.ViewModels
 {
@@ -18,45 +21,42 @@ namespace BarcodePrinter.ViewModels
         private const string WindowTitleDefault = "Ovation Barcode";
 
         private string _windowTitle = WindowTitleDefault;
-        private Task updateTask {get; set; }
+        private AppUpater updater = new AppUpater();
+        private IEventAggregator eventAggregator;
 
         [ImportingConstructor]
-        public MainViewModel(BarcodeLabel label, ApplicationPrinter printer)
+        public MainViewModel(BarcodeLabel label, ApplicationPrinter printer, IEventAggregator eventAggregator)
         {
             this.Label = label;
             this.AppPrinter = printer;
             this.SelectedPrinter = printer.DefaultZebraPrinter;
+            this.eventAggregator = eventAggregator;
+            logger = LogManager.GetLog(GetType());
+
         }
 
         protected override void OnActivate()
         {
             base.OnActivate();
-            updateTask = Task.Run(() => CheckUpdates());
+            updater.CheckUpdates();            
         }
 
-        public override void CanClose(Action<bool> callback)
+        public override async void CanClose(Action<bool> callback)
         {
-            callback(updateTask.IsCompleted || updateTask.IsFaulted);
-        }
-
-        async Task CheckUpdates()
-        {
-
-            using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "us-physion-barcode-printer", FrameworkVersion.Net45))
+            try
             {
-                SquirrelAwareApp.HandleEvents(onInitialInstall: v => AssociateFileExtenstion(),
-                    onAppUpdate: v => AssociateFileExtenstion(),
-                    // ReSharper disable once AccessToDisposedClosure
-                    onAppUninstall: v => mgr.RemoveShortcutForThisExe());
-
-                await mgr.UpdateApp();
+                await updater.UpdateTask;
             }
+            catch (Exception e)
+            {
+                logger.Info("App update failed");
+                logger.Error(e);
+            }
+
+            callback(updater.UpdateComplete);
         }
 
-        void AssociateFileExtenstion()
-        {
-
-        }
+        
 
         public BarcodeLabel Label { get; private set; }
 
@@ -76,13 +76,13 @@ namespace BarcodePrinter.ViewModels
         private ApplicationPrinter AppPrinter { get; set; }
         public IList<string> AvailablePrinters
         {
-            get
-            {
-                return AppPrinter.InstalledZebraPrinters;
+            get { return AppPrinter.InstalledZebraPrinters;
             }
         }
 
         int _printProgress = 0;
+        private ILog logger;
+
         public int Progress {
             get
             {
@@ -121,10 +121,24 @@ namespace BarcodePrinter.ViewModels
             try
             {
                 await Task.Run(() => Label.Print(SelectedPrinter));
+                
+
+                try
+                {
+                    await updater.UpdateTask;
+                }
+                catch (WebException e)
+                {
+                    logger.Info("Application update failed");
+                    logger.Error(e);
+                }
+
+                eventAggregator.PublishOnUIThread(new PrintCompletion(this));
+
             }
             catch (Exception e)
             {
-                LogManager.GetLog(GetType()).Error(e);
+                logger.Error(e);
                 MessageBox.Show("Unable to print label:\n" + e.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
