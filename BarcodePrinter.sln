@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{634564DF-5D3B-4212-836D-E081E0FE8791}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodePrinter", "BarcodePrinter\BarcodePrinter.csproj", "{20C1DE39-CB12-4028-810D-2B24E367F96D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Webpage|Any CPU = Debug Webpage|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20C1DE39-CB12-4028-810D-2B24E367F96D}.Debug Webpage|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C1DE39-CB12-4028-810D-2B24E367F96D}.Debug Webpage|Any CPU.Build.0 = Debug|Any CPU
+		{20C1DE39-CB12-4028-810D-2B24E367F96D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C1DE39-CB12-4028-810D-2B24E367F96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C1DE39-CB12-4028-810D-2B24E367F96D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C1DE39-CB12-4028-810D-2B24E367F96D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

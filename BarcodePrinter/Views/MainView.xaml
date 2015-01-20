@@ -1,0 +1,19 @@
+﻿<Window x:Class="BarcodePrinter.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:model="clr-namespace:BarcodePrinter.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=model:MainViewModel, IsDesignTimeCreatable=False}"
+        Title="{Binding WindowTitle}"
+        cal:Bind.AtDesignTime="True"    
+        Height="300" 
+        Width="300">
+    <Grid>
+        <StackPanel>
+            <Image x:Name="LabelImage"/>
+        </StackPanel>
+    </Grid>
+</Window>
