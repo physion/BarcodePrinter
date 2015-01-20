@@ -24,7 +24,7 @@ namespace BarcodePrinter
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             //TODO read parameter and set it in BarcodeLabel
-            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(Guid.NewGuid().ToString(), 1000, 150), new ApplicationPrinter()));
+            new WindowManager().ShowWindow(new MainViewModel(new BarcodeLabel(Guid.NewGuid().ToString(), 1000, 200), new ApplicationPrinter()));
         }
 
         protected override void Configure()

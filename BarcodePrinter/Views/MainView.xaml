@@ -13,9 +13,21 @@
         Width="300">
     <Grid>
         <StackPanel>
+            <DockPanel Margin="10,10">
+                <Label>Printer:</Label>
+                <ComboBox x:Name="Printer"
+                          HorizontalAlignment="Stretch"
+                          ItemsSource="{Binding AvailablePrinters}"
+                          SelectedItem="{Binding SelectedPrinter, Mode=TwoWay}"/>
+            </DockPanel>
+            
             <Image x:Name="LabelImage"/>
-            <ProgressBar x:Name="Progress"/>
-            <Button x:Name="Print">Print Label</Button>
+            
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Right"
+                        Margin="10,10">
+                <Button x:Name="Print">Print Label</Button>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

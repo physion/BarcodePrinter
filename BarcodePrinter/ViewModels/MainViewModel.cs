@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using BarcodePrinter.Printing;
 using System.Windows.Media;
+using System.Windows;
 
 namespace BarcodePrinter.ViewModels
 {
@@ -70,7 +71,7 @@ namespace BarcodePrinter.ViewModels
 
         public void Print()
         {
-            //TODO print barcode
+            Application.Current.Shutdown();
         }
     }
 }
