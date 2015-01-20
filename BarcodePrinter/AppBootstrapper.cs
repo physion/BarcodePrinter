@@ -12,6 +12,8 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using BarcodePrinter.Logging;
+using Squirrel;
+using System.Threading.Tasks;
 
 namespace BarcodePrinter
 {
@@ -64,7 +66,19 @@ namespace BarcodePrinter
                 //ShowPrintLabel("TEST", 500, 120);
             }
 
+            Task.Run(() => CheckUpdates());
 
+        }
+
+        async Task CheckUpdates()
+        {
+
+            //TODO we should do this at app exit
+
+            using (var mgr = new UpdateManager("https://path/to/my/update/folder", "nuget-package-id", FrameworkVersion.Net45))
+            {
+                await mgr.UpdateApp();
+            }
         }
 
         private void OpenLabel(string path)
