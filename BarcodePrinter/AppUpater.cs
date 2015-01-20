@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System.Windows;
 using Squirrel;
 
 namespace BarcodePrinter
@@ -35,7 +36,7 @@ namespace BarcodePrinter
 
         void AssociateFileExtenstion()
         {
-
+            MessageBox.Show("App updated!");
         }
     }
 }

@@ -17,7 +17,7 @@
   </metadata>
 
   <files>
-    <file src="lib\BarcodeLib.dll" target="lib\net45"/>
-    <file src="lib\Com.SharpZebra.dll" target="lib\net45"/>
+    <file src="lib\net45\BarcodeLib.dll" target="lib\net45"/>
+    <file src="lib\net45\Com.SharpZebra.dll" target="lib\net45"/>
   </files>
 </package>

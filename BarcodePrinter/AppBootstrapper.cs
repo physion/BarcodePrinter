@@ -36,38 +36,38 @@ namespace BarcodePrinter
         {
             ILog logger = LogManager.GetLog(GetType());
 
-            //string[] args = Environment.GetCommandLineArgs();
-            //if (args != null && args.Length >= 2)
-            //{
-            //    string path = args[1];
-            //    OpenLabel(path);
-
-            //}
-
-            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null &&
-                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Length > 0)
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length >= 2)
             {
-                try
-                {
-                    string pathUri = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+                string path = args[1];
+                OpenLabel(path);
 
-                    // It comes in as a URI; this helps to convert it to a path.
-                    Uri uri = new Uri(pathUri);
-                    string path = uri.LocalPath;
-
-                    OpenLabel(path);
-
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex);
-                    MessageBox.Show("Unable to open label file:\n" + ex.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Application.Current.Shutdown();
-                }
             }
+
+//            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null &&
+//                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Length > 0)
+//            {
+//                try
+//                {
+//                    string pathUri = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+//
+//                    // It comes in as a URI; this helps to convert it to a path.
+//                    Uri uri = new Uri(pathUri);
+//                    string path = uri.LocalPath;
+//
+//                    OpenLabel(path);
+//
+//                }
+//                catch (Exception ex)
+//                {
+//                    logger.Error(ex);
+//                    MessageBox.Show("Unable to open label file:\n" + ex.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+//                    Application.Current.Shutdown();
+//                }
+//            }
             else
             {
-                OpenLabel("../../test.obc.txt");
+                OpenLabel("../../test.obc");
                 //ShowPrintLabel("TEST", 500, 120);
             }
 
