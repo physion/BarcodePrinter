@@ -7,6 +7,7 @@ using System.ComponentModel.Composition;
 using BarcodePrinter.Printing;
 using System.Windows.Media;
 using System.Windows;
+using Caliburn.Micro;
 
 namespace BarcodePrinter.ViewModels
 {
@@ -69,10 +70,17 @@ namespace BarcodePrinter.ViewModels
             }
         }
 
-        public void Print()
+        public async Task Print()
         {
-            Label.Print(SelectedPrinter);
-            Application.Current.Shutdown();
+            try
+            {
+                await Task.Run(() => Label.Print(SelectedPrinter));
+            }
+            catch (Exception e)
+            {
+                LogManager.GetLog(GetType()).Error(e);
+                throw;
+            }
         }
     }
 }

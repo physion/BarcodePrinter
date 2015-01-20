@@ -7,10 +7,10 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BarcodeSandbox")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Us.Physion.BarcodePrinter")]
+[assembly: AssemblyDescription("Barcode printer for Zebra printers")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Physion LLC")]
 [assembly: AssemblyProduct("BarcodeSandbox")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
