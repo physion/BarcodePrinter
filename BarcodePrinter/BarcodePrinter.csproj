@@ -120,6 +120,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
+    <Reference Include="QuantityTypes">
+      <HintPath>..\packages\QuantityTypes.1.0.25\lib\portable-net40+net45+sl5+windowsphone8+windows8\QuantityTypes.dll</HintPath>
+    </Reference>
     <Reference Include="Splat">
       <HintPath>..\packages\Splat.1.5.1\lib\Net45\Splat.dll</HintPath>
     </Reference>

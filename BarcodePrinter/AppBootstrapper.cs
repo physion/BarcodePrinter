@@ -67,15 +67,20 @@ namespace BarcodePrinter
 //            }
             else
             {
-                MessageBox.Show("Double-click an '.obc' file.", "Oops!",
-                    MessageBoxButton.OK, MessageBoxImage.Hand);
+              //OpenLabel("../../test.obc");
+              MessageBox.Show("Double-click an '.obc' file.", "Oops!",
+                  MessageBoxButton.OK, MessageBoxImage.Hand);
 
-                Application.Current.Shutdown();
+              Application.Current.Shutdown();
             }
 
         }
 
-        
+
+      double InchesToMillimeters(float m)
+      {
+        return (m*QuantityTypes.Length.Inch).ConvertTo(QuantityTypes.Length.Millimetre);
+      }
 
         private void OpenLabel(string path)
         {
@@ -87,7 +92,9 @@ namespace BarcodePrinter
                 using (StreamReader reader = File.OpenText(path))
                 {
                     dynamic o = JToken.ReadFrom(new JsonTextReader(reader));
-                    ShowPrintLabel((string)o.label, (int)o.width, (int)o.height);
+
+                    // Assumes width & height in inches
+                    ShowPrintLabel((string)o.label, ((float)o.width) * QuantityTypes.Length.Inch, ((float)o.height) * QuantityTypes.Length.Inch);
                 }
             }
             catch (FileNotFoundException ex)
@@ -99,7 +106,7 @@ namespace BarcodePrinter
 
         }
 
-        private void ShowPrintLabel(string label, int width, int height)
+        private void ShowPrintLabel(string label, QuantityTypes.IQuantity width, QuantityTypes.IQuantity height)
         {
             eventAggregator.Subscribe(this);
             windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter(), eventAggregator));
