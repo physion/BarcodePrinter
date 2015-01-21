@@ -1,5 +1,0 @@
-{
-	"label" : "TEST1234",
-	"height" : 50,
-	"width" : 500
-}
