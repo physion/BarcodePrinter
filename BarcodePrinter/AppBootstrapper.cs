@@ -18,11 +18,11 @@ using System.Windows.Threading;
 
 namespace BarcodePrinter
 {
-    class AppBootstrapper : BootstrapperBase, IDisposable, IHandle<PrintCompletion>
+    sealed class AppBootstrapper : BootstrapperBase, IDisposable, IHandle<PrintCompletion>
     {
-        private CompositionContainer container;
-        private WindowManager windowManager;
-        private IEventAggregator eventAggregator = new EventAggregator();
+        private CompositionContainer _container;
+        private WindowManager _windowManager;
+        private readonly IEventAggregator _eventAggregator = new EventAggregator();
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AppBootstrapper()
@@ -36,51 +36,27 @@ namespace BarcodePrinter
         {
             ILog logger = LogManager.GetLog(GetType());
 
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length >= 2)
+
+            AppUpater.Register();
+
+            string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+            if (args.Length >= 1)
             {
-                string path = args[1];
+                var path = args[0];
                 OpenLabel(path);
 
             }
-
-//            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null &&
-//                AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData.Length > 0)
-//            {
-//                try
-//                {
-//                    string pathUri = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
-//
-//                    // It comes in as a URI; this helps to convert it to a path.
-//                    Uri uri = new Uri(pathUri);
-//                    string path = uri.LocalPath;
-//
-//                    OpenLabel(path);
-//
-//                }
-//                catch (Exception ex)
-//                {
-//                    logger.Error(ex);
-//                    MessageBox.Show("Unable to open label file:\n" + ex.Message, "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
-//                    Application.Current.Shutdown();
-//                }
-//            }
             else
             {
-              //OpenLabel("../../test.obc");
-              MessageBox.Show("Double-click an '.obc' file.", "Oops!",
-                  MessageBoxButton.OK, MessageBoxImage.Hand);
-
-              Application.Current.Shutdown();
+                OpenLabel("../../test.obc");
+                //              MessageBox.Show("Double-click an '.obc' file.", "Oops!",
+                //                  MessageBoxButton.OK, MessageBoxImage.Hand);
+                //
+                //              Application.Current.Shutdown();
             }
 
         }
 
-
-      double InchesToMillimeters(float m)
-      {
-        return (m*QuantityTypes.Length.Inch).ConvertTo(QuantityTypes.Length.Millimetre);
-      }
 
         private void OpenLabel(string path)
         {
@@ -108,30 +84,30 @@ namespace BarcodePrinter
 
         private void ShowPrintLabel(string label, QuantityTypes.IQuantity width, QuantityTypes.IQuantity height)
         {
-            eventAggregator.Subscribe(this);
-            windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter(), eventAggregator));
+            _eventAggregator.Subscribe(this);
+            _windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter(), _eventAggregator));
         }
 
 
         protected override void Configure()
         {
-            container = new CompositionContainer(new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()));
+            _container = new CompositionContainer(new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()));
 
             CompositionBatch batch = new CompositionBatch();
 
-            batch.AddExportedValue<IWindowManager>(windowManager);
-            batch.AddExportedValue<IEventAggregator>(eventAggregator);
-            batch.AddExportedValue(container);
+            batch.AddExportedValue<IWindowManager>(_windowManager);
+            batch.AddExportedValue<IEventAggregator>(_eventAggregator);
+            batch.AddExportedValue(_container);
 
-            container.Compose(batch);
+            _container.Compose(batch);
 
-            windowManager = new WindowManager();
+            _windowManager = new WindowManager();
         }
 
         protected override object GetInstance(Type serviceType, string key)
         {
             string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
-            var exports = container.GetExportedValues<object>(contract);
+            var exports = _container.GetExportedValues<object>(contract);
 
             if (exports.Count() > 0)
             {
@@ -145,7 +121,7 @@ namespace BarcodePrinter
 
         public void Dispose()
         {
-            container.Dispose();
+            _container.Dispose();
         }
 
         public void Handle(PrintCompletion message)

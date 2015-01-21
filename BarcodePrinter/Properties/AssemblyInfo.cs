@@ -7,7 +7,7 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Us.Physion.BarcodePrinter")]
+[assembly: AssemblyTitle("Physion.BarcodePrinter")]
 [assembly: AssemblyDescription("Barcode printer for Zebra thermal printers")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Physion LLC")]
@@ -55,4 +55,4 @@ using System.Windows;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 // Mark this assembly as Squirrel aware
-[assembly: AssemblyMetadata("SquirrelAwareVersion", "1")]
+//[assembly: AssemblyMetadata("SquirrelAwareVersion", "1")]

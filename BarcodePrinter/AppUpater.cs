@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows;
+using Caliburn.Micro;
 using Squirrel;
 
 namespace BarcodePrinter
@@ -19,24 +20,27 @@ namespace BarcodePrinter
             UpdateTask = Task.Run(() => RunCheck());
         }
 
-        private async Task RunCheck()
+        private static ILog logger = LogManager.GetLog(typeof (AppUpater));
+
+        public static void Register()
         {
-            using (
-                var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer",
-                    "us-physion-barcode-printer", FrameworkVersion.Net45))
+            using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "PhysionBarcodePrinter", FrameworkVersion.Net45))
             {
-                SquirrelAwareApp.HandleEvents(onInitialInstall: v => AssociateFileExtenstion(),
-                    onAppUpdate: v => AssociateFileExtenstion(),
+                SquirrelAwareApp.HandleEvents(
+                    onInitialInstall: v => MessageBox.Show("Barcode Printer installed succesfully", "Installation Succesful", MessageBoxButton.OK, MessageBoxImage.Information),
+                    onAppUpdate: v => logger.Info("App updated"),
                     // ReSharper disable once AccessToDisposedClosure
                     onAppUninstall: v => mgr.RemoveShortcutForThisExe());
 
-                await mgr.UpdateApp();
             }
         }
 
-        void AssociateFileExtenstion()
+        private async Task RunCheck()
         {
-            MessageBox.Show("App updated!");
+            using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "PhysionBarcodePrinter", FrameworkVersion.Net45))
+            {
+                await mgr.UpdateApp();
+            }
         }
     }
 }
