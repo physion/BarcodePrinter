@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BarcodePrinter.Logging
 {
-    class NLogLogger
+    class NLogLogger : Caliburn.Micro.ILog
     {
         #region Fields
         private readonly NLog.Logger _innerLogger;

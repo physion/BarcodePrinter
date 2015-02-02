@@ -28,7 +28,7 @@ namespace BarcodePrinter
         public AppBootstrapper()
         {
             StartRuntime();
-            LogManager.GetLog = type => new DebugLogger(type);
+            LogManager.GetLog = type => (ILog)new NLogLogger(type);
         }
 
 
@@ -39,6 +39,8 @@ namespace BarcodePrinter
 
             //AppUpater.Register();
 
+          logger.Info("Starting barcode printer");
+
             string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
             if (args.Length >= 1 && !args[0].Contains("--squirrel"))
             {
@@ -48,6 +50,7 @@ namespace BarcodePrinter
             }
             else
             {
+              logger.Warn("No input file found. Opening test.obc");
                 OpenLabel("../../test.obc");
                 //              MessageBox.Show("Double-click an '.obc' file.", "Oops!",
                 //                  MessageBoxButton.OK, MessageBoxImage.Hand);
