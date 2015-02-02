@@ -76,8 +76,7 @@ namespace BarcodePrinter.ViewModels
         private ApplicationPrinter AppPrinter { get; set; }
         public IList<string> AvailablePrinters
         {
-            get { return AppPrinter.InstalledZebraPrinters;
-            }
+            get { return AppPrinter.InstalledZebraPrinters; }
         }
 
         int _printProgress = 0;

@@ -39,6 +39,12 @@ namespace BarcodePrinter
         {
             using (var mgr = new UpdateManager(@"https://s3.amazonaws.com/download.ovation.io/barcode_printer", "PhysionBarcodePrinter", FrameworkVersion.Net45))
             {
+                SquirrelAwareApp.HandleEvents(
+                    onInitialInstall: v => MessageBox.Show("Barcode Printer installed succesfully", "Installation Succesful", MessageBoxButton.OK, MessageBoxImage.Information),
+                    onAppUpdate: v => logger.Info("App updated"),
+                    // ReSharper disable once AccessToDisposedClosure
+                    onAppUninstall: v => mgr.RemoveShortcutForThisExe());
+
                 await mgr.UpdateApp();
             }
         }
