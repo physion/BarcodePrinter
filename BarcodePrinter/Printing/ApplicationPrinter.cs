@@ -31,7 +31,7 @@ namespace BarcodePrinter.Printing
         private static bool IsZebraPrinter(string printer)
         {
             return !string.IsNullOrEmpty(printer)
-                   && printer.ToUpper().Contains("ZEBRA");
+                   && (printer.ToUpper().Contains("ZEBRA") || printer.ToUpper().Contains("ZDESIGNER"));
         }
 
         private IList<string> ToSortedStringArray(PrinterSettings.StringCollection printers)

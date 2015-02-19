@@ -13,6 +13,7 @@ using System.Windows;
 using Com.SharpZebra.Printing;
 using Com.SharpZebra.Commands;
 using Com.SharpZebra;
+using Com.SharpZebra.Commands.Codes;
 
 
 namespace BarcodePrinter
@@ -49,8 +50,8 @@ namespace BarcodePrinter
             BarcodeLib.Barcode b = new BarcodeLib.Barcode(Contents, BarcodeLib.TYPE.CODE128);
             b.ForeColor = System.Drawing.Color.Black;
             b.BackColor = System.Drawing.Color.White;
-            b.Width = (int) Math.Ceiling(Width.ConvertTo(QuantityTypes.Length.Inch) * 96); //96 DPI
-            b.Height = (int) Math.Ceiling(Height.ConvertTo(QuantityTypes.Length.Inch) * 96); //96 DPI
+            b.Width = (int)Math.Ceiling(Width.ConvertTo(QuantityTypes.Length.Inch) * 96); //96 DPI
+            b.Height = (int)Math.Ceiling(Height.ConvertTo(QuantityTypes.Length.Inch) * 96); //96 DPI
             b.IncludeLabel = true;
 
 
@@ -60,24 +61,25 @@ namespace BarcodePrinter
 
         public void Print(string printer)
         {
-            PrinterSettings ps = new PrinterSettings();
-            ps.PrinterName = printer;
+            //ps.Width = 2034; //dots
+            //ps.Length = 2034; //dots 
 
-            List<byte> page = new List<byte>();
-            page.AddRange(ZPLCommands.ClearPrinter(ps));
 
-            Barcode barcode = new Barcode()
-            {
-                Type = Com.SharpZebra.BarcodeType.CODE128_AUTO,
-                BarWidthNarrow = 2 //2 dots for narrow bar
-            };
-          
-            int heightDots = (int) Math.Ceiling(Height.ConvertTo(QuantityTypes.Length.Millimetre)*8); //8 dots per mm
+            int heightDots = (int)Math.Ceiling(Height.ConvertTo(QuantityTypes.Length.Millimetre) * 8); //8 dots per mm
+            int widthDots = heightDots;
 
-            page.AddRange(ZPLCommands.BarCodeWrite(10, 10, heightDots, ElementDrawRotation.NO_ROTATION, barcode, true, Contents));
+            var commands = new ZebraCommands();
+            commands.Add(ZebraCommands.BarCodeCommand(10,
+              10,
+              ElementRotation.NO_ROTATION,
+              1, //Com.SharpZebra.BarcodeType.CODE128_AUTO,
+              2, //narrow width dots
+              widthDots,
+              heightDots,
+              true,
+              Contents));
 
-            page.AddRange(ZPLCommands.PrintBuffer(1));
-            new SpoolPrinter(ps).Print(page.ToArray());
+            new ZebraPrinter(printer).Print(commands.ToZebraInstruction());
         }
     }
 

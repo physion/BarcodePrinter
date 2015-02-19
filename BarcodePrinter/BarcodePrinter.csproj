@@ -162,7 +162,6 @@
     <Compile Include="Logging\DebugLogger.cs" />
     <Compile Include="Logging\NLogLogger.cs" />
     <Compile Include="Printing\ApplicationPrinter.cs" />
-    <Compile Include="Printing\LabelBuilder.cs" />
     <Compile Include="AppUpater.cs" />
     <Compile Include="Printing\PrintCompletion.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -195,6 +194,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="ClassDiagram1.cd" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

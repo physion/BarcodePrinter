@@ -70,7 +70,7 @@ namespace BarcodePrinter
             {
                 using (StreamReader reader = File.OpenText(path))
                 {
-                    dynamic o = JToken.ReadFrom(new JsonTextReader(reader));
+                    dynamic o = JToken.ReadFrom(new JsonTextReader(reader))[0];
 
                     // Assumes width & height in inches
                     ShowPrintLabel((string)o.label, ((float)o.width) * QuantityTypes.Length.Inch, ((float)o.height) * QuantityTypes.Length.Inch);

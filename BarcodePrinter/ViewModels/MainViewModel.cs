@@ -38,7 +38,7 @@ namespace BarcodePrinter.ViewModels
         protected override void OnActivate()
         {
             base.OnActivate();
-            updater.CheckUpdates();            
+            updater.CheckUpdates();
         }
 
         public override async void CanClose(Action<bool> callback)
@@ -56,7 +56,7 @@ namespace BarcodePrinter.ViewModels
             callback(updater.UpdateComplete);
         }
 
-        
+
 
         public BarcodeLabel Label { get; private set; }
 
@@ -82,7 +82,8 @@ namespace BarcodePrinter.ViewModels
         int _printProgress = 0;
         private ILog logger;
 
-        public int Progress {
+        public int Progress
+        {
             get
             {
                 return _printProgress;
@@ -115,12 +116,12 @@ namespace BarcodePrinter.ViewModels
             }
         }
 
-        public async Task Print()
+        public async void Print()
         {
             try
             {
-                await Task.Run(() => Label.Print(SelectedPrinter));
-                
+                //await Task.Run(() => Label.Print(SelectedPrinter));
+                Label.Print(SelectedPrinter);
 
                 try
                 {

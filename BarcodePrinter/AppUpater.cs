@@ -47,6 +47,8 @@ namespace BarcodePrinter
                     onAppUninstall: v => mgr.RemoveShortcutForThisExe());
 
                 await mgr.UpdateApp();
+              
+                logger.Info("UpdateApp complete");
             }
         }
     }
