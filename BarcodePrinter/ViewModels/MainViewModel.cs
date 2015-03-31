@@ -120,7 +120,7 @@ namespace BarcodePrinter.ViewModels
         {
             try
             {
-                //await Task.Run(() => Label.Print(SelectedPrinter));
+                //await Task.Run(() => Label.Print(Selected Printer));
                 Label.Print(SelectedPrinter);
 
                 try

@@ -58,28 +58,12 @@ namespace BarcodePrinter
             return b.Encode(BarcodeLib.TYPE.CODE128, Contents);
         }
 
+        public static int dpi = 203;
 
         public void Print(string printer)
         {
-            //ps.Width = 2034; //dots
-            //ps.Length = 2034; //dots 
-
-
-            int heightDots = (int)Math.Ceiling(Height.ConvertTo(QuantityTypes.Length.Millimetre) * 8); //8 dots per mm
-            int widthDots = heightDots;
-
-            var commands = new ZebraCommands();
-            commands.Add(ZebraCommands.BarCodeCommand(10,
-              10,
-              ElementRotation.NO_ROTATION,
-              1, //Com.SharpZebra.BarcodeType.CODE128_AUTO,
-              2, //narrow width dots
-              widthDots,
-              heightDots,
-              true,
-              Contents));
-
-            new ZebraPrinter(printer).Print(commands.ToZebraInstruction());
+            string command = "\nN\nq347\nD10\nb30,33,A,\"{0}\"\nB150,20,0,1,1,2,80,B,\"{0}\"\nP1\n";
+            new ZebraPrinter(printer).Print(String.Format(command, Contents)); 
         }
     }
 
