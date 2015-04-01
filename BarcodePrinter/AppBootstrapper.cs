@@ -39,19 +39,28 @@ namespace BarcodePrinter
 
             //AppUpater.Register();
 
-          logger.Info("Starting barcode printer");
+            logger.Info("Starting barcode printer");
 
-            string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
-            if (args.Length >= 1 && !args[0].Contains("--squirrel"))
+            if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments != null)
             {
-                var path = args[0];
-                OpenLabel(path);
+                string[] activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
+                if (activationData != null && activationData.Length >= 1)
+                {
+                    var path = new Uri(activationData[0]).LocalPath;
+                    OpenLabel(path);
+                }
+                //string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
+                //if (args.Length >= 1 && !args[0].Contains("--squirrel"))
+                //{
+                //    var path = args[0];
+                //    OpenLabel(path);
 
+                //}
             }
             else
             {
                 logger.Warn("No input file found. Opening test.obc");
-                
+
                 //OpenLabel("../../test.obc");
 
                 MessageBox.Show("Double-click an '.obc' file.", "Oops!",
