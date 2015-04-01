@@ -23,14 +23,16 @@ namespace BarcodePrinter
     class BarcodeLabel
     {
 
-        public BarcodeLabel(String contents, QuantityTypes.IQuantity width, QuantityTypes.IQuantity height)
+        public BarcodeLabel(String contents, String epl)
         {
             this.Contents = contents;
-            this.Width = width;
-            this.Height = height;
+            this.Epl = epl;
+            this.Width = 1.75 * QuantityTypes.Length.Inch;
+            this.Height = 0.6 * QuantityTypes.Length.Inch;
         }
 
         public string Contents { get; private set; }
+        public string Epl { get; private set; }
 
         public string BarcodeType { get; private set; }
 
@@ -62,8 +64,7 @@ namespace BarcodePrinter
 
         public void Print(string printer)
         {
-            string command = "\nN\nq347\nD10\nb30,33,A,\"{0}\"\nB150,20,0,1,1,2,80,B,\"{0}\"\nP1\n";
-            new ZebraPrinter(printer).Print(String.Format(command, Contents)); 
+            new ZebraPrinter(printer).Print(String.Format(this.Epl, Contents)); 
         }
     }
 

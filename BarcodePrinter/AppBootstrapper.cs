@@ -72,8 +72,7 @@ namespace BarcodePrinter
                 {
                     dynamic o = JToken.ReadFrom(new JsonTextReader(reader))[0];
 
-                    // Assumes width & height in inches
-                    ShowPrintLabel((string)o.label, ((float)o.width) * QuantityTypes.Length.Inch, ((float)o.height) * QuantityTypes.Length.Inch);
+                    ShowPrintLabel((string)o.label, (string)o.epl);
                 }
             }
             catch (FileNotFoundException ex)
@@ -85,10 +84,10 @@ namespace BarcodePrinter
 
         }
 
-        private void ShowPrintLabel(string label, QuantityTypes.IQuantity width, QuantityTypes.IQuantity height)
+        private void ShowPrintLabel(string label, string epl)
         {
             _eventAggregator.Subscribe(this);
-            _windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, width, height), new ApplicationPrinter(), _eventAggregator));
+            _windowManager.ShowWindow(new MainViewModel(new BarcodeLabel(label, epl), new ApplicationPrinter(), _eventAggregator));
         }
 
 
