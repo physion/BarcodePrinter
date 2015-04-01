@@ -50,12 +50,14 @@ namespace BarcodePrinter
             }
             else
             {
-              logger.Warn("No input file found. Opening test.obc");
-                OpenLabel("../../test.obc");
-                //              MessageBox.Show("Double-click an '.obc' file.", "Oops!",
-                //                  MessageBoxButton.OK, MessageBoxImage.Hand);
-                //
-                //              Application.Current.Shutdown();
+                logger.Warn("No input file found. Opening test.obc");
+                
+                //OpenLabel("../../test.obc");
+
+                MessageBox.Show("Double-click an '.obc' file.", "Oops!",
+                    MessageBoxButton.OK, MessageBoxImage.Hand);
+
+                Application.Current.Shutdown();
             }
 
         }

@@ -16,23 +16,32 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <TargetFrameworkProfile />
+    <BuildPackage>true</BuildPackage>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
+    <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
-    <UpdateMode>Background</UpdateMode>
+    <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <InstallUrl>https://s3.amazonaws.com/clickonce-ovation-io/BarcodePrinter/</InstallUrl>
+    <SupportUrl>https://ovation.io/</SupportUrl>
+    <ProductName>BarcodePrinter</ProductName>
+    <PublisherName>Physion LLC</PublisherName>
+    <SuiteName>Ovation Complete</SuiteName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <BuildPackage>true</BuildPackage>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -64,10 +73,20 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>E73E95D3B67C68C254D8CA87447038E65F2EA255</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestTimestampUrl>http://timestamp.digicert.com</ManifestTimestampUrl>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BarcodeLib">
@@ -92,8 +111,9 @@
     <Reference Include="DeltaCompressionDotNet.PatchApi">
       <HintPath>..\packages\DeltaCompressionDotNet.1.0.0\lib\net45\DeltaCompressionDotNet.PatchApi.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\squirrel.windows.0.7.2\lib\Net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\squirrel.windows.0.9.2.1\lib\Net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.XmlTransform">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
@@ -124,14 +144,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NuGet.Core.2.8.3\lib\net40-Client\NuGet.Core.dll</HintPath>
     </Reference>
-    <Reference Include="QuantityTypes">
-      <HintPath>..\packages\QuantityTypes.1.0.25\lib\portable-net40+net45+sl5+windowsphone8+windows8\QuantityTypes.dll</HintPath>
+    <Reference Include="QuantityTypes, Version=1.0.40.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\QuantityTypes.1.0.40\lib\portable-net40+net45+sl5+windowsphone8+windows8\QuantityTypes.dll</HintPath>
     </Reference>
     <Reference Include="Splat">
       <HintPath>..\packages\Splat.1.5.1\lib\Net45\Splat.dll</HintPath>
     </Reference>
-    <Reference Include="Squirrel">
-      <HintPath>..\packages\squirrel.windows.0.7.2\lib\Net45\Squirrel.dll</HintPath>
+    <Reference Include="Squirrel, Version=0.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\squirrel.windows.0.9.2.1\lib\Net45\Squirrel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -194,6 +216,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="BarcodePrinter_TemporaryKey.pfx" />
     <None Include="ClassDiagram1.cd" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
