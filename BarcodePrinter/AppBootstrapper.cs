@@ -49,6 +49,18 @@ namespace BarcodePrinter
                     var path = new Uri(activationData[0]).LocalPath;
                     OpenLabel(path);
                 }
+                else
+                {
+                    logger.Info("No input file found. Exiting.");
+
+                    OpenLabel("../../test.obc");
+
+                    //MessageBox.Show("Double-click an '.obc' file.", "Oops!",
+                    //    MessageBoxButton.OK, MessageBoxImage.Hand);
+
+                    Application.Current.Shutdown();
+                }
+
                 //string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
                 //if (args.Length >= 1 && !args[0].Contains("--squirrel"))
                 //{
@@ -59,12 +71,12 @@ namespace BarcodePrinter
             }
             else
             {
-                logger.Warn("No input file found. Opening test.obc");
+                logger.Info("No input file found. Exiting.");
 
-                //OpenLabel("../../test.obc");
+                OpenLabel("../../test.obc");
 
-                MessageBox.Show("Double-click an '.obc' file.", "Oops!",
-                    MessageBoxButton.OK, MessageBoxImage.Hand);
+                //MessageBox.Show("Double-click an '.obc' file.", "Oops!",
+                //    MessageBoxButton.OK, MessageBoxImage.Hand);
 
                 Application.Current.Shutdown();
             }

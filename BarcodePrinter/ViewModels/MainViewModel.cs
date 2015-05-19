@@ -21,7 +21,7 @@ namespace BarcodePrinter.ViewModels
         private const string WindowTitleDefault = "Ovation Barcode";
 
         private string _windowTitle = WindowTitleDefault;
-        private AppUpater updater = new AppUpater();
+        //private AppUpater updater = new AppUpater();
         private IEventAggregator eventAggregator;
 
         [ImportingConstructor]
@@ -35,26 +35,26 @@ namespace BarcodePrinter.ViewModels
 
         }
 
-        protected override void OnActivate()
-        {
-            base.OnActivate();
-            updater.CheckUpdates();
-        }
+        //protected override void OnActivate()
+        //{
+        //    base.OnActivate();
+        //    //updater.CheckUpdates();
+        //}
 
-        public override async void CanClose(Action<bool> callback)
-        {
-            try
-            {
-                await updater.UpdateTask;
-            }
-            catch (Exception e)
-            {
-                logger.Info("App update failed");
-                logger.Error(e);
-            }
+        //public override async void CanClose(Action<bool> callback)
+        //{
+        //    try
+        //    {
+        //        await updater.UpdateTask;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        logger.Info("App update failed");
+        //        logger.Error(e);
+        //    }
 
-            callback(updater.UpdateComplete);
-        }
+        //    callback(updater.UpdateComplete);
+        //}
 
 
 
@@ -120,18 +120,18 @@ namespace BarcodePrinter.ViewModels
         {
             try
             {
-                //await Task.Run(() => Label.Print(Selected Printer));
-                Label.Print(SelectedPrinter);
+                await Task.Run(() => Label.Print(SelectedPrinter));
+                //Label.Print(SelectedPrinter);
 
-                try
-                {
-                    await updater.UpdateTask;
-                }
-                catch (WebException e)
-                {
-                    logger.Info("Application update failed");
-                    logger.Error(e);
-                }
+                //try
+                //{
+                //    await updater.UpdateTask;
+                //}
+                //catch (WebException e)
+                //{
+                //    logger.Info("Application update failed");
+                //    logger.Error(e);
+                //}
 
                 eventAggregator.PublishOnUIThread(new PrintCompletion(this));
 
