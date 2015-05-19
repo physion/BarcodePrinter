@@ -21,7 +21,6 @@ namespace BarcodePrinter.ViewModels
         private const string WindowTitleDefault = "Ovation Barcode";
 
         private string _windowTitle = WindowTitleDefault;
-        //private AppUpater updater = new AppUpater();
         private IEventAggregator eventAggregator;
 
         [ImportingConstructor]
@@ -34,28 +33,6 @@ namespace BarcodePrinter.ViewModels
             logger = LogManager.GetLog(GetType());
 
         }
-
-        //protected override void OnActivate()
-        //{
-        //    base.OnActivate();
-        //    //updater.CheckUpdates();
-        //}
-
-        //public override async void CanClose(Action<bool> callback)
-        //{
-        //    try
-        //    {
-        //        await updater.UpdateTask;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        logger.Info("App update failed");
-        //        logger.Error(e);
-        //    }
-
-        //    callback(updater.UpdateComplete);
-        //}
-
 
 
         public BarcodeLabel Label { get; private set; }
@@ -116,22 +93,12 @@ namespace BarcodePrinter.ViewModels
             }
         }
 
-        public async void Print()
+        public void Print()
         {
             try
             {
-                await Task.Run(() => Label.Print(SelectedPrinter));
-                //Label.Print(SelectedPrinter);
-
-                //try
-                //{
-                //    await updater.UpdateTask;
-                //}
-                //catch (WebException e)
-                //{
-                //    logger.Info("Application update failed");
-                //    logger.Error(e);
-                //}
+                //await Task.Run(() => Label.Print(SelectedPrinter));
+                Label.Print(SelectedPrinter);
 
                 eventAggregator.PublishOnUIThread(new PrintCompletion(this));
 

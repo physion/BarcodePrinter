@@ -12,7 +12,6 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using BarcodePrinter.Logging;
-using Squirrel;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -37,8 +36,6 @@ namespace BarcodePrinter
             ILog logger = LogManager.GetLog(GetType());
 
 
-            //AppUpater.Register();
-
             logger.Info("Starting barcode printer");
 
             if (AppDomain.CurrentDomain.SetupInformation.ActivationArguments != null)
@@ -53,27 +50,19 @@ namespace BarcodePrinter
                 {
                     logger.Info("No input file found. Exiting.");
 
-                    OpenLabel("../../test.obc");
+                    //OpenLabel("../../test.obc");
 
                     //MessageBox.Show("Double-click an '.obc' file.", "Oops!",
                     //    MessageBoxButton.OK, MessageBoxImage.Hand);
 
                     Application.Current.Shutdown();
                 }
-
-                //string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
-                //if (args.Length >= 1 && !args[0].Contains("--squirrel"))
-                //{
-                //    var path = args[0];
-                //    OpenLabel(path);
-
-                //}
             }
             else
             {
                 logger.Info("No input file found. Exiting.");
 
-                OpenLabel("../../test.obc");
+                //OpenLabel("../../test.obc");
 
                 //MessageBox.Show("Double-click an '.obc' file.", "Oops!",
                 //    MessageBoxButton.OK, MessageBoxImage.Hand);
