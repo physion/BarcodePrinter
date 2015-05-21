@@ -2,15 +2,39 @@
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Linq;
+using System.Management;
+using Caliburn.Micro;
 
 namespace BarcodePrinter.Printing
 {
     public class ApplicationPrinter
     {
+        ILog logger = LogManager.GetLog(typeof(ApplicationPrinter));
+
         public IList<string> InstalledPrinters
         {
             get
             {
+                if (PrinterSettings.InstalledPrinters.Count == 0)
+                {
+                    logger.Info("InstalledPrinters list is empty. Trying via System.Management");
+
+                    var query = new ObjectQuery("SELECT * FROM Win32_Printer");
+                    var searcher = new ManagementObjectSearcher(query);
+
+                    List<string> result = new List<string>();
+                    foreach (ManagementObject mo in searcher.Get())
+                    {
+                        result.Add((string)mo["Name"]);
+                    }
+
+                    result.Sort(StringComparer.Ordinal);
+
+                    return result;
+
+                }
+
+
                 return ToSortedStringArray(PrinterSettings.InstalledPrinters);
             }
         }
