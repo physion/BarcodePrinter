@@ -22,5 +22,17 @@ namespace BarcodePrinter.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultPrinterName {
+            get {
+                return ((string)(this["DefaultPrinterName"]));
+            }
+            set {
+                this["DefaultPrinterName"] = value;
+            }
+        }
     }
 }

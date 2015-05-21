@@ -28,7 +28,14 @@ namespace BarcodePrinter.ViewModels
         {
             this.Label = label;
             this.AppPrinter = printer;
-            this.SelectedPrinter = printer.DefaultZebraPrinter;
+            string printerName;
+            if (BarcodePrinter.Properties.Settings.Default.DefaultPrinterName == null || BarcodePrinter.Properties.Settings.Default.DefaultPrinterName.Length == 0)
+            {
+                printerName = printer.DefaultZebraPrinter;
+            } else {
+                printerName = BarcodePrinter.Properties.Settings.Default.DefaultPrinterName;
+            }
+            this.SelectedPrinter = printerName;
             this.eventAggregator = eventAggregator;
             logger = LogManager.GetLog(GetType());
 
@@ -45,6 +52,8 @@ namespace BarcodePrinter.ViewModels
             set
             {
                 _selectedPrinter = value;
+                BarcodePrinter.Properties.Settings.Default.DefaultPrinterName = _selectedPrinter;
+                BarcodePrinter.Properties.Settings.Default.Save();
                 NotifyOfPropertyChange(() => SelectedPrinter);
                 NotifyOfPropertyChange(() => CanPrint);
             }
@@ -53,7 +62,7 @@ namespace BarcodePrinter.ViewModels
         private ApplicationPrinter AppPrinter { get; set; }
         public IList<string> AvailablePrinters
         {
-            get { return AppPrinter.InstalledZebraPrinters; }
+            get { return AppPrinter.InstalledPrinters; }
         }
 
         int _printProgress = 0;

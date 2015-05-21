@@ -26,7 +26,9 @@ namespace BarcodePrinter
         public AppBootstrapper()
         {
             StartRuntime();
+#if (DEBUG==false)
             LogManager.GetLog = type => (ILog)new NLogLogger(type);
+#endif
         }
 
 
@@ -47,26 +49,26 @@ namespace BarcodePrinter
                 }
                 else
                 {
+#if DEBUG
+
+
+                    OpenLabel("../../test.obc");
+#else
                     logger.Info("No input file found. Exiting.");
-
-                    //OpenLabel("../../test.obc");
-
-                    //MessageBox.Show("Double-click an '.obc' file.", "Oops!",
-                    //    MessageBoxButton.OK, MessageBoxImage.Hand);
-
                     Application.Current.Shutdown();
+#endif
                 }
             }
             else
             {
-                logger.Info("No input file found. Exiting.");
+#if DEBUG
 
-                //OpenLabel("../../test.obc");
 
-                //MessageBox.Show("Double-click an '.obc' file.", "Oops!",
-                //    MessageBoxButton.OK, MessageBoxImage.Hand);
-
-                Application.Current.Shutdown();
+                OpenLabel("../../test.obc");
+#else
+                    logger.Info("No input file found. Exiting.");
+                    Application.Current.Shutdown();
+#endif
             }
 
         }
@@ -104,7 +106,7 @@ namespace BarcodePrinter
 
         protected override void Configure()
         {
-             _windowManager = new WindowManager();
+            _windowManager = new WindowManager();
         }
 
         public void Handle(PrintCompletion message)
