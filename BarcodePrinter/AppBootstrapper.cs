@@ -17,9 +17,8 @@ using System.Windows.Threading;
 
 namespace BarcodePrinter
 {
-    sealed class AppBootstrapper : BootstrapperBase, IDisposable, IHandle<PrintCompletion>
+    sealed class AppBootstrapper : BootstrapperBase, IHandle<PrintCompletion>
     {
-        private CompositionContainer _container;
         private WindowManager _windowManager;
         private readonly IEventAggregator _eventAggregator = new EventAggregator();
 
@@ -105,37 +104,7 @@ namespace BarcodePrinter
 
         protected override void Configure()
         {
-            _container = new CompositionContainer(new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()));
-
-            CompositionBatch batch = new CompositionBatch();
-
-            batch.AddExportedValue<IWindowManager>(_windowManager);
-            batch.AddExportedValue<IEventAggregator>(_eventAggregator);
-            batch.AddExportedValue(_container);
-
-            _container.Compose(batch);
-
-            _windowManager = new WindowManager();
-        }
-
-        protected override object GetInstance(Type serviceType, string key)
-        {
-            string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
-            var exports = _container.GetExportedValues<object>(contract);
-
-            if (exports.Count() > 0)
-            {
-                return exports.First();
-            }
-
-            throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
-        }
-
-
-
-        public void Dispose()
-        {
-            _container.Dispose();
+             _windowManager = new WindowManager();
         }
 
         public void Handle(PrintCompletion message)
